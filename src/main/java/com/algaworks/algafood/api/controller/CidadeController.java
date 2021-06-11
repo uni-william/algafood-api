@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +40,7 @@ public class CidadeController {
 		try {
 			Cidade cidade = cadastroCidade.buscarPorId(id);
 			return ResponseEntity.ok(cidade);
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
 
@@ -64,10 +63,11 @@ public class CidadeController {
 			BeanUtils.copyProperties(cidade, cidadeSalva, "id");
 			cadastroCidade.salvar(cidadeSalva);
 			return ResponseEntity.ok(cidadeSalva);
-		} catch (EmptyResultDataAccessException e) {
-			return ResponseEntity.notFound().build();
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			if (e.getMessage().contains("estado"))
+				return ResponseEntity.badRequest().body(e.getMessage());
+			else
+				return ResponseEntity.notFound().build();
 		}
 	}
 

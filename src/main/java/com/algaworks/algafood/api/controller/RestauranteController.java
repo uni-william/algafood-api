@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
@@ -65,10 +64,11 @@ public class RestauranteController {
 			BeanUtils.copyProperties(restaurante, restauranteSalva, "id");
 			cadastroRestaurante.salvar(restauranteSalva);
 			return ResponseEntity.ok(restauranteSalva);
-		} catch (EmptyResultDataAccessException e) {
-			return ResponseEntity.notFound().build();
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			if (e.getMessage().contains("restaurante"))
+				return ResponseEntity.notFound().build();
+			else
+				return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 
@@ -89,7 +89,7 @@ public class RestauranteController {
 			Restaurante restauranteSalvo = cadastroRestaurante.buscarPorId(id);
 			merge(campos, restauranteSalvo);	
 			return atualizar(id, restauranteSalvo);
-		} catch (EmptyResultDataAccessException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
