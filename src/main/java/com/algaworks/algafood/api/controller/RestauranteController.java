@@ -61,7 +61,7 @@ public class RestauranteController {
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
 		try {
 			Restaurante restauranteSalva = cadastroRestaurante.buscarPorId(id);
-			BeanUtils.copyProperties(restaurante, restauranteSalva, "id");
+			BeanUtils.copyProperties(restaurante, restauranteSalva, "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 			cadastroRestaurante.salvar(restauranteSalva);
 			return ResponseEntity.ok(restauranteSalva);
 		} catch (EntidadeNaoEncontradaException e) {
