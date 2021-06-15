@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
+
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -27,8 +28,7 @@ public class CadastroRestauranteService {
 
 	public Restaurante buscarPorId(Long id) {
 		Restaurante restaurante = restauranteRepository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format("Não existe cadastro de restaurante com o código %d", id)));
+				.orElseThrow(() -> new RestauranteNaoEncontradoException(id));
 		return restaurante;
 
 	}
@@ -37,8 +37,7 @@ public class CadastroRestauranteService {
 		try {
 			restauranteRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de restaurante com o código %d", id));
+			throw new RestauranteNaoEncontradoException(id);
 		}
 
 	}
