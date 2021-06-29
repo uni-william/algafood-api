@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -19,20 +20,20 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = cadastroCozinha.buscarPorId(cozinhaId);
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
 	}
+	
+	public Restaurante buscarPorId(Long restauranteId) {
+		return restauranteRepository.findById(restauranteId)
+			.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
+	}	
 
-	public Restaurante buscarPorId(Long id) {
-		Restaurante restaurante = restauranteRepository.findById(id)
-				.orElseThrow(() -> new RestauranteNaoEncontradoException(id));
-		return restaurante;
-
-	}
-
+	@Transactional
 	public void excluir(Long id) {
 		try {
 			restauranteRepository.deleteById(id);

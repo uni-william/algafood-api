@@ -9,10 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
-
-import com.algaworks.algafood.core.validation.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +28,6 @@ public class Cidade {
 	
 	@NotNull
 	@Valid
-	@ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
 	@ManyToOne
 	@JoinColumn(name = "estado_id")
 	private Estado  estado;
