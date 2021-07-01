@@ -41,8 +41,8 @@ public class CadastroCidadeService {
 	@Transactional
 	public void excluir(Long id) {
 		try {
-			Cidade cidade = buscarPorId(id);
-			cidadeRepository.delete(cidade);
+			cidadeRepository.deleteById(id);
+			cidadeRepository.flush();
 		} catch (EmptyResultDataAccessException e) {
 			throw new CidadeNaoEncontradaException(id);
 

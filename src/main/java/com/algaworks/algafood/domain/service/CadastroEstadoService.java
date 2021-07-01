@@ -33,8 +33,8 @@ public class CadastroEstadoService {
 	@Transactional
 	public void excluir(Long id) {
 		try {
-			Estado estado = buscarPorId(id);
-			estadoRepository.delete(estado);
+			estadoRepository.deleteById(id);
+			estadoRepository.flush();
 		} catch (EmptyResultDataAccessException e) {
 			throw new EstadoNaoEncontradoException(id);
 		} catch (DataIntegrityViolationException e) {

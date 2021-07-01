@@ -20,8 +20,6 @@ import com.algaworks.algafood.api.assembler.CozinhaInputDisassembler;
 import com.algaworks.algafood.api.assembler.CozinhaModelAssembler;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.input.CozinhaInput;
-import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
@@ -35,12 +33,12 @@ public class CozinhaController {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
-	
+
 	@Autowired
 	private CozinhaModelAssembler cozinhaModelAssembler;
-	
+
 	@Autowired
-	private CozinhaInputDisassembler cozinhaInputDisassembler;	
+	private CozinhaInputDisassembler cozinhaInputDisassembler;
 
 	@GetMapping
 	public List<CozinhaModel> listar() {
@@ -57,27 +55,16 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
-		try {
-			Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
-			return cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinha));
-		} catch (CozinhaNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage(), e);
-		}
+		Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+		return cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinha));
+
 	}
 
 	@PutMapping("/{id}")
 	public CozinhaModel atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInput cozinhaInput) {
-
-		
 		Cozinha cozinhaSalva = cadastroCozinha.buscarPorId(id);
-		
 		cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaSalva);
-		
-		try {
-			return cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinhaSalva));
-		} catch (CozinhaNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage(), e);
-		}
+		return cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinhaSalva));
 	}
 
 	@DeleteMapping("/{id}")
@@ -85,5 +72,5 @@ public class CozinhaController {
 	public void delete(@PathVariable Long id) {
 		cadastroCozinha.excluir(id);
 	}
-	
+
 }

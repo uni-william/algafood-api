@@ -16,9 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -36,11 +33,10 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 	
-	@NotBlank
+
 	private String nome;
 
-	@NotNull
-	@PositiveOrZero
+
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
@@ -51,6 +47,7 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
+	private Boolean ativo = Boolean.TRUE;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -71,6 +68,14 @@ public class Restaurante {
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();		
+	
+	public void ativar() {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}	
 	
 
 }

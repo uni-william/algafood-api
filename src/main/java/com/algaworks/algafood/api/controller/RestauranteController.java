@@ -66,15 +66,9 @@ public class RestauranteController {
 	}
 
 	@PutMapping("/{id}")
-	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {
-//		Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-		
+	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {	
 		Restaurante restauranteSalva = cadastroRestaurante.buscarPorId(id);
-		
 		restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteSalva);
-		
-//		BeanUtils.copyProperties(restaurante, restauranteSalva, "id", "formasPagamento", "endereco", "dataCadastro",
-//				"produtos");
 		try {
 			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteSalva));
 		} catch (CozinhaNaoEncontradaException e) {
@@ -87,5 +81,18 @@ public class RestauranteController {
 	public void delete(@PathVariable Long id) {
 		cadastroRestaurante.excluir(id);
 	}
+	
+	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long restauranteId) {
+		cadastroRestaurante.ativar(restauranteId);
+	}
+	
+	@DeleteMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long restauranteId) {
+		cadastroRestaurante.inativar(restauranteId);
+	}
+	
 
 }
