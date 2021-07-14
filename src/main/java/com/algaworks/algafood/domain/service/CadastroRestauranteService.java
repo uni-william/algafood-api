@@ -10,6 +10,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -27,6 +28,9 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuario;	
 	
 	
 
@@ -83,6 +87,36 @@ public class CadastroRestauranteService {
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarPorId(formaPagamentoId);
 		
 		restaurante.adicionarFormaPagamento(formaPagamento);	
+	}
+	
+	@Transactional
+	public void abrir(Long restauranteId) {
+		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		
+		restauranteAtual.abrir();
+	}
+	
+	@Transactional
+	public void fechar(Long restauranteId) {
+		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		
+		restauranteAtual.fechar();
+	}	
+	
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarPorId(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+		
+		restaurante.removerResponsavel(usuario);
+	}
+	
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarPorId(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+		
+		restaurante.adicionarResponsavel(usuario);
 	}	
 
 }

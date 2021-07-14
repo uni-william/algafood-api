@@ -35,9 +35,7 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 	
-
 	private String nome;
-
 
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
@@ -50,6 +48,8 @@ public class Restaurante {
 	private Endereco endereco;
 	
 	private Boolean ativo = Boolean.TRUE;
+	
+	private Boolean aberto = Boolean.FALSE;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -67,6 +67,12 @@ public class Restaurante {
 			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private Set<FormaPagamento> formasPagamento = new HashSet<>();	
 	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+			joinColumns = @JoinColumn(name = "restaurante_id"),
+			inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> responsaveis = new HashSet<>();	
+	
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();		
@@ -79,12 +85,28 @@ public class Restaurante {
 		setAtivo(false);
 	}	
 	
+	public void abrir() {
+		setAberto(true);
+	}
+	
+	public void fechar() {
+		setAberto(false);
+	}	
+	
 	public boolean adicionarFormaPagamento (FormaPagamento formaPagamento) {
 		return getFormasPagamento().add(formaPagamento);
 	}
 	
 	public boolean removerFormaPagamento (FormaPagamento formaPagamento) {
 		return getFormasPagamento().remove(formaPagamento);
+	}	
+	
+	public boolean removerResponsavel(Usuario usuario) {
+		return getResponsaveis().remove(usuario);
+	}
+	
+	public boolean adicionarResponsavel(Usuario usuario) {
+		return getResponsaveis().add(usuario);
 	}	
 
 }

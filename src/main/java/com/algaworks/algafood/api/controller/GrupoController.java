@@ -47,7 +47,7 @@ public class GrupoController {
 
 	@GetMapping("/{id}")
 	public GrupoModel findById(@PathVariable Long id) {
-		Grupo grupo = cadastroGrupo.buscarPorId(id);
+		Grupo grupo = cadastroGrupo.buscarOuFalhar(id);
 		return grupoModelAssembler.toModel(grupo);
 
 	}
@@ -62,7 +62,7 @@ public class GrupoController {
 
 	@PutMapping("/{id}")
 	public GrupoModel atualizar(@PathVariable Long id, @RequestBody @Valid GrupoInput grupoInput) {
-		Grupo grupoSalvo = cadastroGrupo.buscarPorId(id);
+		Grupo grupoSalvo = cadastroGrupo.buscarOuFalhar(id);
 		grupoInputDisassembler.copyToDomainObject(grupoInput, grupoSalvo);
 		return grupoModelAssembler.toModel(cadastroGrupo.salvar(grupoSalvo));
 	}
