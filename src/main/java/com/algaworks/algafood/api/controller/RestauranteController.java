@@ -51,7 +51,7 @@ public class RestauranteController {
 
 	@GetMapping("/{id}")
 	public RestauranteModel findById(@PathVariable Long id) {
-		Restaurante restaurante = cadastroRestaurante.buscarPorId(id);
+		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(id);
 		return restauranteModelAssembler.toModel(restaurante);
 
 	}
@@ -69,7 +69,7 @@ public class RestauranteController {
 
 	@PutMapping("/{id}")
 	public RestauranteModel atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {
-		Restaurante restauranteSalva = cadastroRestaurante.buscarPorId(id);
+		Restaurante restauranteSalva = cadastroRestaurante.buscarOuFalhar(id);
 		restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteSalva);
 		try {
 			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteSalva));

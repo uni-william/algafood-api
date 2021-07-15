@@ -47,7 +47,7 @@ public class FormaPagamentoController {
 
 	@GetMapping("/{id}")
 	public FormaPagamentoModel findById(@PathVariable Long id) {
-		FormaPagamento formaPagamento = cadastroFormaPagamento.buscarPorId(id);
+		FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
 		return formaPagamentoModelAssembler.toModel(formaPagamento);
 
 	}
@@ -62,7 +62,7 @@ public class FormaPagamentoController {
 
 	@PutMapping("/{id}")
 	public FormaPagamentoModel atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
-		FormaPagamento formaPagamentoSalva = cadastroFormaPagamento.buscarPorId(id);
+		FormaPagamento formaPagamentoSalva = cadastroFormaPagamento.buscarOuFalhar(id);
 		formaPagamentoInputDisassembler.copyToDomainObject(formaPagamentoInput, formaPagamentoSalva);
 		return formaPagamentoModelAssembler.toModel(cadastroFormaPagamento.salvar(formaPagamentoSalva));
 	}

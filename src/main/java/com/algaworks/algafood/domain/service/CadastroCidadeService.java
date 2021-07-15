@@ -31,7 +31,7 @@ public class CadastroCidadeService {
 		return cidadeRepository.save(cidade);
 	}
 
-	public Cidade buscarPorId(Long id) {
+	public Cidade buscarOuFalhar(Long id) {
 		Cidade cidade = cidadeRepository.findById(id)
 				.orElseThrow(() -> new CidadeNaoEncontradaException(id));
 		return cidade;

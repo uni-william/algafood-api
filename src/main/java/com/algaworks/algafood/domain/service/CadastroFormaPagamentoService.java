@@ -24,7 +24,7 @@ public class CadastroFormaPagamentoService {
 		return formaPagamentoRepository.save(formaPagamento);
 	}
 
-	public FormaPagamento buscarPorId(Long id) {
+	public FormaPagamento buscarOuFalhar(Long id) {
 		FormaPagamento formaPagamento = formaPagamentoRepository.findById(id)
 		.orElseThrow(() -> new FormaPagamentoNaoEncontradaException(id));
 		return formaPagamento;

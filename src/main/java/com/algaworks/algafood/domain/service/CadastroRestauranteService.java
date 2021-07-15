@@ -41,7 +41,7 @@ public class CadastroRestauranteService {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Long cidadeId = restaurante.getEndereco().getCidade().getId();
 		Cozinha cozinha = cadastroCozinha.buscarPorId(cozinhaId);
-		Cidade cidade = cadastroCidadeService.buscarPorId(cidadeId);
+		Cidade cidade = cadastroCidadeService.buscarOuFalhar(cidadeId);
 		restaurante.setCozinha(cozinha);
 		restaurante.getEndereco().setCidade(cidade);
 		return restauranteRepository.save(restaurante);
@@ -49,13 +49,13 @@ public class CadastroRestauranteService {
 	
 	@Transactional
 	public void ativar(Long restauranteId) {
-		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		restauranteAtual.ativar();
 	}
 	
 	@Transactional
 	public void inativar(Long restauranteId) {
-		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		restauranteAtual.inativar();
 	}	
 	
@@ -69,7 +69,7 @@ public class CadastroRestauranteService {
 		restauranteIds.forEach(this::inativar);
 	}	
 	
-	public Restaurante buscarPorId(Long restauranteId) {
+	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId)
 			.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
 	}	
@@ -87,37 +87,37 @@ public class CadastroRestauranteService {
 	
 	@Transactional
 	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
-		Restaurante restaurante = buscarPorId(restauranteId);
-		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarPorId(formaPagamentoId);
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
 		
 		restaurante.removerFormaPagamento(formaPagamento);	
 	}
 	
 	@Transactional
 	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
-		Restaurante restaurante = buscarPorId(restauranteId);
-		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarPorId(formaPagamentoId);
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
 		
 		restaurante.adicionarFormaPagamento(formaPagamento);	
 	}
 	
 	@Transactional
 	public void abrir(Long restauranteId) {
-		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		
 		restauranteAtual.abrir();
 	}
 	
 	@Transactional
 	public void fechar(Long restauranteId) {
-		Restaurante restauranteAtual = buscarPorId(restauranteId);
+		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		
 		restauranteAtual.fechar();
 	}	
 	
 	@Transactional
 	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
-		Restaurante restaurante = buscarPorId(restauranteId);
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
 		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 		
 		restaurante.removerResponsavel(usuario);
@@ -125,7 +125,7 @@ public class CadastroRestauranteService {
 	
 	@Transactional
 	public void associarResponsavel(Long restauranteId, Long usuarioId) {
-		Restaurante restaurante = buscarPorId(restauranteId);
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
 		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 		
 		restaurante.adicionarResponsavel(usuario);

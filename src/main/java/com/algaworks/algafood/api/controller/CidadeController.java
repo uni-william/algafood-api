@@ -49,7 +49,7 @@ public class CidadeController {
 
 	@GetMapping("/{id}")
 	public CidadeModel findById(@PathVariable Long id) {
-		Cidade cidade = cadastroCidade.buscarPorId(id);
+		Cidade cidade = cadastroCidade.buscarOuFalhar(id);
 		return cidadeModelAssembler.toModel(cidade);
 
 	}
@@ -67,7 +67,7 @@ public class CidadeController {
 
 	@PutMapping("/{id}")
 	public CidadeModel atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {	
-		Cidade cidadeSalva = cadastroCidade.buscarPorId(id);
+		Cidade cidadeSalva = cadastroCidade.buscarOuFalhar(id);
 		cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeSalva);
 		try {
 			return cidadeModelAssembler.toModel(cadastroCidade.salvar(cidadeSalva));
